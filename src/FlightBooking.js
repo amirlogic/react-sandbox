@@ -4,14 +4,16 @@ import "./styles.css";
 
 import { useReducer } from "react";
 
-const initialState = { mode: "twoway" };
+const initialState = { mode: "twoway", startdate: "", enddate: "" };
 
 function reducer(state, action) {
   switch (action.type) {
     case "mode":
-      return { mode: "" };
-    case "departure":
-      return { count: state.count - 1 };
+      return { mode: action.payload };
+    case "startdate":
+      return { startdate: action.payload };
+    case "enddate":
+      return { enddate: action.payload };
     default:
       throw new Error();
   }
@@ -20,30 +22,53 @@ function reducer(state, action) {
 export default function FlightBooking() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const inputCelsius = (event) => {
-    setTemp(event.target.value);
+  const isValidDate = (event) => {
+    let indate = new Date(event.target.value);
+
+    if (indate - Date.now() > 0) {
+      console.log("Valid");
+      return true;
+    } else {
+      console.log("Not Valid");
+      return false;
+    }
   };
 
-  const inputFahr = (event) => {
-    setTemp(((event.target.value - 32) * 5) / 9);
+  const changeMode = (event) => {
+    dispatch({ type: "mode", payload: event.target.value });
+    console.log(event.target.value);
+  };
+
+  const changeStartDate = (event) => {
+    dispatch({ type: "startdate", payload: event.target.value });
+    console.log(state.startdate);
+  };
+
+  const changeEndDate = (event) => {
+    dispatch({ type: "enddate", payload: event.target.value });
+    console.log(state.enddate);
   };
 
   return (
     <div className="App">
       <div>
-        <select value={state.mode} onChange={inputCelsius}>
+        <select value={state.mode} onChange={changeMode}>
           <option value="twoway">Round trip</option>
           <option value="oneway">One way</option>
         </select>
       </div>
 
       <div>
-        Departure: <input type="date" onChange={inputFahr} />
+        Departure: <input type="date" onChange={changeStartDate} />
       </div>
 
-      <div>
-        Return: <input type="date" onChange={inputFahr} />
-      </div>
+      {state.mode != "oneway" ? (
+        <div>
+          Return: <input type="date" onChange={changeEndDate} />
+        </div>
+      ) : (
+        " "
+      )}
     </div>
   );
 }
