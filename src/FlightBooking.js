@@ -8,9 +8,9 @@ const initialState = { mode: "twoway" };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "increment":
-      return { count: state.count + 1 };
-    case "decrement":
+    case "mode":
+      return { mode: "" };
+    case "departure":
       return { count: state.count - 1 };
     default:
       throw new Error();
@@ -38,7 +38,11 @@ export default function FlightBooking() {
       </div>
 
       <div>
-        <input type="text" value={(temp * 9) / 5 + 32} onChange={inputFahr} />
+        Departure: <input type="date" onChange={inputFahr} />
+      </div>
+
+      <div>
+        Return: <input type="date" onChange={inputFahr} />
       </div>
     </div>
   );
